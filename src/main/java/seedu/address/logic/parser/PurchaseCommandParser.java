@@ -4,6 +4,7 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DRINKNAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_REDEEM;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import seedu.address.commons.core.index.Index;
@@ -35,6 +36,16 @@ public class PurchaseCommandParser implements Parser<PurchaseCommand> {
         if (!argMultimap.getValue(PREFIX_DRINKNAME).isPresent()) {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, PurchaseCommand.MESSAGE_USAGE));
+        }
+
+        // Check for multiple n/ flags
+        List<String> drinkNames = argMultimap.getAllValues(PREFIX_DRINKNAME);
+        if (drinkNames.size() > 1) {
+            throw new ParseException("Multiple values specified for the following single-valued field(s): n/");
+        }
+        List<String> redemptions = argMultimap.getAllValues(PREFIX_REDEEM);
+        if (redemptions.size() > 1) {
+            throw new ParseException("Multiple values specified for the following single-valued field(s): redeem/");
         }
 
         String drinkName = argMultimap.getValue(PREFIX_DRINKNAME).get();
